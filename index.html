@@ -40,7 +40,8 @@
     .card-ket .icon-box { background-color: #fef3c7; color: #b47804; } .card-ket h5 { color: #b47804; } .card-ket .btn-dash { background-color: #b47804; } .card-ket .btn-dash:hover { background-color: #8f5f03; color: white; }
     
     .summary-box { background: #ffffff; border-radius: 16px; padding: 20px 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; display: flex; align-items: center; flex-wrap: wrap; gap: 20px; margin-top: 30px;}
-    .summary-header { display: flex; align-items: center; gap: 15px; padding-right: 20px; border-right: 2px solid #f0f0f0; flex: 1; min-width: 250px; }
+    .summary-header { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding-right: 20px; border-right: 2px solid #f0f0f0; flex: 1; min-width: 250px; }
+    .summary-header .top-part { display: flex; align-items: center; gap: 15px;}
     .summary-header .icon-box { width: 50px; height: 50px; font-size: 1.5rem; background: #e8f5e9; color: #1b7b3d; }
     .summary-header h6 { margin: 0; font-weight: 700; color: #1b7b3d; font-size: 1rem; }
     .summary-header p { margin: 0; font-size: 0.75rem; color: #666; }
@@ -64,6 +65,14 @@
     .table-container { border-radius: 12px; overflow: hidden; border: 1px solid #eaeeeb; }
     .table thead th { background-color: #f4f8f5; color: #444; font-weight: 600; border-bottom: 2px solid #dce4de; padding: 15px; font-size: 0.9rem;}
     .table tbody td { padding: 15px; vertical-align: middle; font-size: 0.9rem;}
+    .table tbody tr { transition: background-color 0.2s; }
+
+    /* Custom Search Input */
+    .search-wrapper .input-group-text { background-color: #fbfdfc; border: 1px solid #dce4de; border-right: none; border-top-left-radius: 30px; border-bottom-left-radius: 30px; }
+    .search-wrapper .form-control { border-left: none; border-top-right-radius: 30px; border-bottom-right-radius: 30px; padding-left: 0; }
+    .search-wrapper .form-control:focus + .input-group-text, .search-wrapper .form-control:focus { border-color: #228b22; box-shadow: none; }
+    
+    .filter-tahun { border-radius: 30px; font-weight: 500; color: #444; }
 
     /* Badge Unit */
     .badge-unit { padding: 6px 12px; border-radius: 30px; font-weight: 600; font-size: 0.75rem; letter-spacing: 0.5px; }
@@ -73,6 +82,10 @@
     .unit-pemerintahan { background-color: #ffebee; color: #c62828; }
     .unit-pelayanan { background-color: #fff3e0; color: #ef6c00; }
     .unit-kesejahteraan { background-color: #e0f7fa; color: #00838f; }
+
+    /* Admin Toggle */
+    .admin-toggle { cursor: pointer; display: flex; align-items: center; gap: 8px; color: #667085; font-size: 0.85rem; font-weight: 600; background: #f0f0f0; padding: 6px 15px; border-radius: 30px; transition: 0.3s; }
+    .admin-toggle.active { background: #fee2e2; color: #c62828; }
 
     /* ================= FOOTER ================= */
     .custom-footer { background-color: #0b4d3c; color: white; padding: 15px 30px; margin-top: auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
@@ -119,7 +132,14 @@
   <!-- ================= DASHBOARD VIEW ================= -->
   <div id="dashboard-view" class="dashboard-section">
     <div class="container">
-      <h3 class="fw-bold mb-4" style="color: #0c5640;"><i class="fa-solid fa-grip me-2"></i> Dashboard Layanan Arsip</h3>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold m-0" style="color: #0c5640;"><i class="fa-solid fa-grip me-2"></i> Dashboard Layanan Arsip</h3>
+        <!-- Toggle Mode Admin -->
+        <div id="adminToggleBtn" class="admin-toggle" onclick="toggleAdminMode()">
+          <i class="fa-solid fa-lock"></i> Mode Publik
+        </div>
+      </div>
+      
       <!-- 3 Cards -->
       <div class="row g-4">
         <div class="col-lg-4 col-md-6">
@@ -137,7 +157,7 @@
           <div class="dash-card card-keluar">
             <div class="icon-box"><i class="fa-solid fa-paper-plane"></i></div>
             <div class="card-content">
-              <h5>SURAT KELUAR (PER UNIT)</h5>
+              <h5>SURAT KELUAR</h5>
               <p>Arsip surat keluar berdasarkan 6 Unit Perangkat Desa.</p>
               <button class="btn-dash" onclick="showDataView('keluar-tab')">Kelola Sekarang <i class="fa-solid fa-arrow-right"></i></button>
             </div>
@@ -159,29 +179,38 @@
       <!-- Summary Box -->
       <div class="summary-box">
         <div class="summary-header">
-          <div class="icon-box"><i class="fa-solid fa-binders"></i></div>
-          <div>
-            <h6>RINGKASAN ARSIP</h6>
-            <p>Total arsip di database Supabase</p>
+          <div class="top-part">
+            <div class="icon-box"><i class="fa-solid fa-binders"></i></div>
+            <div>
+              <h6>RINGKASAN ARSIP</h6>
+              <p>Database Supabase</p>
+            </div>
           </div>
+          <!-- Filter Tahun Dashboard -->
+          <select id="dashYear" class="form-select form-select-sm filter-tahun mt-2 w-100">
+            <option value="2026" selected>Tahun 2026</option>
+            <option value="2027">Tahun 2027</option>
+            <option value="2028">Tahun 2028</option>
+            <option value="semua">Semua Tahun</option>
+          </select>
         </div>
         
         <div class="summary-stats">
           <div class="stat-item">
             <div class="stat-icon" style="background:#e8f5e9; color:#1b7b3d;"><i class="fa-solid fa-inbox"></i></div>
-            <div class="stat-info"><h3 id="count-masuk">0</h3><span>Surat Masuk</span><small>Tahun &ge; 2026</small></div>
+            <div class="stat-info"><h3 id="count-masuk">0</h3><span>Surat Masuk</span></div>
           </div>
           <div class="stat-item">
             <div class="stat-icon" style="background:#e8f0fe; color:#1967d2;"><i class="fa-solid fa-paper-plane"></i></div>
-            <div class="stat-info"><h3 id="count-keluar">0</h3><span>Surat Keluar</span><small>Tahun &ge; 2026</small></div>
+            <div class="stat-info"><h3 id="count-keluar">0</h3><span>Surat Keluar</span></div>
           </div>
           <div class="stat-item">
             <div class="stat-icon" style="background:#fef3c7; color:#b47804;"><i class="fa-solid fa-file-signature"></i></div>
-            <div class="stat-info"><h3 id="count-ket">0</h3><span>Surat Ket.</span><small>Tahun &ge; 2026</small></div>
+            <div class="stat-info"><h3 id="count-ket">0</h3><span>Surat Ket.</span></div>
           </div>
           <div class="stat-item">
             <div class="stat-icon" style="background:#1b7b3d; color:white;"><i class="fa-solid fa-folder-open"></i></div>
-            <div class="stat-info"><h3 id="count-total">0</h3><span>Total Arsip</span><small>Keseluruhan</small></div>
+            <div class="stat-info"><h3 id="count-total">0</h3><span>Total Arsip</span></div>
           </div>
         </div>
       </div>
@@ -228,7 +257,7 @@
                 <div class="mb-3"><label class="form-label">Nomor Surat</label><input type="text" class="form-control" id="m_nomor" required></div>
                 <div class="mb-3"><label class="form-label">Pengirim</label><input type="text" class="form-control" id="m_pengirim" required></div>
                 <div class="mb-3"><label class="form-label">Perihal</label><textarea class="form-control" id="m_perihal" rows="2" required></textarea></div>
-                <div class="mb-3"><label class="form-label">Tanggal Terima</label><input type="date" class="form-control" id="m_tanggal" min="2026-01-01" required></div>
+                <div class="mb-3"><label class="form-label">Tanggal Terima</label><input type="date" class="form-control" id="m_tanggal" required></div>
                 <div class="mb-4"><label class="form-label">Upload Berkas Fisik</label><input type="file" class="form-control" id="m_file" accept=".pdf,image/*"></div>
                 <button type="submit" class="btn btn-primary-custom w-100 rounded-pill py-2"><i class="fa-solid fa-cloud-arrow-up me-2"></i>Simpan Arsip</button>
               </form>
@@ -236,10 +265,23 @@
           </div>
           <div class="col-lg-8">
             <div class="card-form h-100">
-              <div class="d-flex justify-content-between align-items-center mb-4">
+              <!-- Toolbar Filter & Search -->
+              <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
                 <h5 class="mb-0 fw-bold" style="color: #444;">Daftar Surat Masuk</h5>
-                <button class="btn btn-sm btn-outline-success rounded-pill px-3 btn-refresh" data-type="masuk"><i class="fa-solid fa-rotate-right me-1"></i>Segarkan</button>
+                <div class="d-flex flex-wrap gap-2">
+                  <select id="filterTahunMasuk" class="form-select form-select-sm w-auto filter-tahun">
+                    <option value="2026" selected>2026</option>
+                    <option value="2027">2027</option>
+                    <option value="semua">Semua Tahun</option>
+                  </select>
+                  <div class="input-group input-group-sm w-auto search-wrapper">
+                    <span class="input-group-text"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                    <input type="text" id="searchMasuk" class="form-control" placeholder="Cari surat...">
+                  </div>
+                  <button class="btn btn-sm btn-outline-success rounded-pill px-3" onclick="fetchSuratMasuk()"><i class="fa-solid fa-rotate-right"></i></button>
+                </div>
               </div>
+              
               <div class="table-container table-responsive">
                 <table class="table table-hover align-middle">
                   <thead><tr><th>No. Surat</th><th>Pengirim</th><th>Perihal</th><th>Tgl Terima</th><th class="text-center">Aksi</th></tr></thead>
@@ -259,8 +301,6 @@
               <h5 class="mb-4" style="color: #1967d2; font-weight: 700;"><i class="fa-solid fa-folder-plus me-2"></i>Input Surat Keluar</h5>
               <form id="formKeluar">
                 <div class="mb-3"><label class="form-label">Nomor Surat</label><input type="text" class="form-control" id="k_nomor" required></div>
-                
-                <!-- BARU: Pilihan Unit -->
                 <div class="mb-3">
                   <label class="form-label">Unit Pengirim <span class="text-danger">*</span></label>
                   <select class="form-select" id="k_unit" required>
@@ -273,10 +313,9 @@
                     <option value="KASI Kesejahteraan">KASI Kesejahteraan</option>
                   </select>
                 </div>
-
                 <div class="mb-3"><label class="form-label">Tujuan</label><input type="text" class="form-control" id="k_tujuan" required></div>
                 <div class="mb-3"><label class="form-label">Perihal</label><textarea class="form-control" id="k_perihal" rows="2" required></textarea></div>
-                <div class="mb-3"><label class="form-label">Tanggal Keluar</label><input type="date" class="form-control" id="k_tanggal" min="2026-01-01" required></div>
+                <div class="mb-3"><label class="form-label">Tanggal Keluar</label><input type="date" class="form-control" id="k_tanggal" required></div>
                 <div class="mb-4"><label class="form-label">Upload Berkas Fisik</label><input type="file" class="form-control" id="k_file" accept=".pdf,image/*"></div>
                 <button type="submit" class="btn text-white w-100 rounded-pill py-2" style="background-color:#1967d2;"><i class="fa-solid fa-cloud-arrow-up me-2"></i>Simpan Arsip</button>
               </form>
@@ -284,10 +323,23 @@
           </div>
           <div class="col-lg-8">
             <div class="card-form h-100">
-              <div class="d-flex justify-content-between align-items-center mb-4">
+              <!-- Toolbar Filter & Search -->
+              <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
                 <h5 class="mb-0 fw-bold" style="color: #444;">Daftar Surat Keluar</h5>
-                <button class="btn btn-sm btn-outline-primary rounded-pill px-3 btn-refresh" data-type="keluar"><i class="fa-solid fa-rotate-right me-1"></i>Segarkan</button>
+                <div class="d-flex flex-wrap gap-2">
+                  <select id="filterTahunKeluar" class="form-select form-select-sm w-auto filter-tahun">
+                    <option value="2026" selected>2026</option>
+                    <option value="2027">2027</option>
+                    <option value="semua">Semua Tahun</option>
+                  </select>
+                  <div class="input-group input-group-sm w-auto search-wrapper">
+                    <span class="input-group-text"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                    <input type="text" id="searchKeluar" class="form-control" placeholder="Cari surat/unit...">
+                  </div>
+                  <button class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="fetchSuratKeluar()"><i class="fa-solid fa-rotate-right"></i></button>
+                </div>
               </div>
+
               <div class="table-container table-responsive">
                 <table class="table table-hover align-middle">
                   <thead><tr><th>No. Surat</th><th>Unit</th><th>Tujuan</th><th>Perihal</th><th>Tgl Keluar</th><th class="text-center">Aksi</th></tr></thead>
@@ -319,14 +371,8 @@
                     <option value="Lainnya">Lainnya</option>
                   </select>
                 </div>
-                
-                <!-- BARU: Kolom Perihal untuk Surat Keterangan -->
-                <div class="mb-3">
-                  <label class="form-label">Perihal / Keperluan</label>
-                  <textarea class="form-control" id="ket_perihal" rows="2" placeholder="Contoh: Keperluan mendaftar beasiswa" required></textarea>
-                </div>
-
-                <div class="mb-3"><label class="form-label">Tanggal Dibuat</label><input type="date" class="form-control" id="ket_tanggal" min="2026-01-01" required></div>
+                <div class="mb-3"><label class="form-label">Perihal / Keperluan</label><textarea class="form-control" id="ket_perihal" rows="2" required></textarea></div>
+                <div class="mb-3"><label class="form-label">Tanggal Dibuat</label><input type="date" class="form-control" id="ket_tanggal" required></div>
                 <div class="mb-4"><label class="form-label">Upload Berkas Fisik</label><input type="file" class="form-control" id="ket_file" accept=".pdf,image/*"></div>
                 <button type="submit" class="btn text-white w-100 rounded-pill py-2" style="background-color:#b47804;"><i class="fa-solid fa-cloud-arrow-up me-2"></i>Simpan Arsip</button>
               </form>
@@ -334,10 +380,23 @@
           </div>
           <div class="col-lg-8">
             <div class="card-form h-100">
-              <div class="d-flex justify-content-between align-items-center mb-4">
+              <!-- Toolbar Filter & Search -->
+              <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
                 <h5 class="mb-0 fw-bold" style="color: #444;">Daftar Surat Keterangan</h5>
-                <button class="btn btn-sm btn-outline-warning text-dark rounded-pill px-3 btn-refresh" data-type="keterangan"><i class="fa-solid fa-rotate-right me-1"></i>Segarkan</button>
+                <div class="d-flex flex-wrap gap-2">
+                  <select id="filterTahunKeterangan" class="form-select form-select-sm w-auto filter-tahun">
+                    <option value="2026" selected>2026</option>
+                    <option value="2027">2027</option>
+                    <option value="semua">Semua Tahun</option>
+                  </select>
+                  <div class="input-group input-group-sm w-auto search-wrapper">
+                    <span class="input-group-text"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                    <input type="text" id="searchKeterangan" class="form-control" placeholder="Cari pemohon/surat...">
+                  </div>
+                  <button class="btn btn-sm btn-outline-warning text-dark rounded-pill px-3" onclick="fetchSuratKeterangan()"><i class="fa-solid fa-rotate-right"></i></button>
+                </div>
               </div>
+
               <div class="table-container table-responsive">
                 <table class="table table-hover align-middle">
                   <thead><tr><th>No. Surat</th><th>Pemohon</th><th>Jenis</th><th>Perihal</th><th>Tanggal</th><th class="text-center">Aksi</th></tr></thead>
@@ -349,6 +408,26 @@
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- Modal Konfirmasi Hapus -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0" style="border-radius: 16px;">
+        <div class="modal-header border-0 pb-0">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center pb-4 px-4">
+          <i class="fa-solid fa-triangle-exclamation text-danger mb-3" style="font-size: 3rem;"></i>
+          <h5 class="fw-bold mb-3">Hapus Arsip?</h5>
+          <p class="text-muted mb-4">Arsip yang dihapus tidak dapat dikembalikan. Apakah Anda yakin?</p>
+          <div class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Batal</button>
+            <button type="button" class="btn btn-danger rounded-pill px-4" id="confirmDeleteBtn">Ya, Hapus</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -388,7 +467,38 @@
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     const BUCKET_NAME = 'arsip_desa';
-    const TAHUN_AWAL = '2026-01-01';
+    
+    // Global State
+    let isAdminMode = false;
+    let deleteData = { id: null, table: null };
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+
+    // Cache Data Array (Untuk Search Client-Side yg super cepat)
+    let cacheMasuk = [];
+    let cacheKeluar = [];
+    let cacheKeterangan = [];
+
+    // Admin Toggle Logic
+    window.toggleAdminMode = function() {
+      if(isAdminMode) {
+        isAdminMode = false;
+        const btn = document.getElementById('adminToggleBtn');
+        btn.innerHTML = '<i class="fa-solid fa-lock"></i> Mode Publik';
+        btn.classList.remove('active');
+        renderSuratMasuk(); renderSuratKeluar(); renderSuratKeterangan();
+        return;
+      }
+      const pin = prompt("Masukkan PIN Admin untuk mengaktifkan fitur hapus:");
+      if(pin === "1234") { 
+        isAdminMode = true;
+        const btn = document.getElementById('adminToggleBtn');
+        btn.innerHTML = '<i class="fa-solid fa-unlock"></i> Mode Admin Aktif';
+        btn.classList.add('active');
+        renderSuratMasuk(); renderSuratKeluar(); renderSuratKeterangan();
+      } else if(pin !== null) {
+        alert("PIN Salah!");
+      }
+    };
 
     // UI Togglers
     window.showDataView = function(tabId) {
@@ -434,25 +544,42 @@
       return publicUrlData.publicUrl;
     }
 
-    async function updateDashboardCounts() {
+    // ================= DASHBOARD COUNTS =================
+    window.updateDashboardCounts = async function() {
+      const year = document.getElementById('dashYear').value;
       try {
-        const { count: countM } = await supabase.from('surat_masuk').select('*', { count: 'exact', head: true }).gte('tanggal_terima', TAHUN_AWAL);
-        const { count: countK } = await supabase.from('surat_keluar').select('*', { count: 'exact', head: true }).gte('tanggal_keluar', TAHUN_AWAL);
-        const { count: countKet } = await supabase.from('surat_keterangan').select('*', { count: 'exact', head: true }).gte('tanggal_dibuat', TAHUN_AWAL);
+        let qM = supabase.from('surat_masuk').select('*', { count: 'exact', head: true });
+        let qK = supabase.from('surat_keluar').select('*', { count: 'exact', head: true });
+        let qKet = supabase.from('surat_keterangan').select('*', { count: 'exact', head: true });
         
-        document.getElementById('count-masuk').innerText = countM || 0;
-        document.getElementById('count-keluar').innerText = countK || 0;
-        document.getElementById('count-ket').innerText = countKet || 0;
-        document.getElementById('count-total').innerText = (countM || 0) + (countK || 0) + (countKet || 0);
+        if (year !== 'semua') {
+          qM = qM.gte('tanggal_terima', `${year}-01-01`).lte('tanggal_terima', `${year}-12-31`);
+          qK = qK.gte('tanggal_keluar', `${year}-01-01`).lte('tanggal_keluar', `${year}-12-31`);
+          qKet = qKet.gte('tanggal_dibuat', `${year}-01-01`).lte('tanggal_dibuat', `${year}-12-31`);
+        }
+
+        const [resM, resK, resKet] = await Promise.all([qM, qK, qKet]);
+        
+        const countM = resM.count || 0;
+        const countK = resK.count || 0;
+        const countKet = resKet.count || 0;
+
+        document.getElementById('count-masuk').innerText = countM;
+        document.getElementById('count-keluar').innerText = countK;
+        document.getElementById('count-ket').innerText = countKet;
+        document.getElementById('count-total').innerText = countM + countK + countKet;
       } catch (e) { console.error("Gagal load statistik:", e); }
     }
 
+    // Bind event untuk dropdown tahun di dashboard
+    document.getElementById('dashYear').addEventListener('change', updateDashboardCounts);
+
+    // ================= HELPER FORMAT =================
     function formatDateID(dateString) {
       if(!dateString) return "-";
       return new Date(dateString).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
     }
 
-    // Helper untuk Warna Badge Unit
     function getUnitBadge(unitName) {
       if(!unitName) return "-";
       let badgeClass = "bg-secondary";
@@ -464,6 +591,31 @@
       else if(unitName === "KASI Kesejahteraan") badgeClass = "unit-kesejahteraan";
       return `<span class="badge-unit ${badgeClass}">${unitName}</span>`;
     }
+
+    // ================= DELETE LOGIC =================
+    window.promptDelete = function(id, table) {
+      deleteData = { id, table };
+      deleteModal.show();
+    };
+
+    document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+      deleteModal.hide();
+      loading.show("Menghapus arsip...");
+      try {
+        const { error } = await supabase.from(deleteData.table).delete().eq('id', deleteData.id);
+        if(error) throw error;
+        
+        if(deleteData.table === 'surat_masuk') window.fetchSuratMasuk();
+        if(deleteData.table === 'surat_keluar') window.fetchSuratKeluar();
+        if(deleteData.table === 'surat_keterangan') window.fetchSuratKeterangan();
+        updateDashboardCounts();
+      } catch(e) {
+        console.error(e);
+        alert("Gagal menghapus data.");
+      } finally {
+        loading.hide();
+      }
+    });
 
     // ================= SURAT MASUK =================
     document.getElementById('formMasuk').addEventListener('submit', async (e) => {
@@ -477,21 +629,57 @@
           file_url: fileUrl, status: "Diarsipkan"
         }]);
         if (error) throw error;
-        document.getElementById('formMasuk').reset(); loadSuratMasuk(); updateDashboardCounts();
+        document.getElementById('formMasuk').reset(); window.fetchSuratMasuk(); updateDashboardCounts();
       } catch (error) { console.error(error); alert("Terjadi kesalahan sistem!"); } finally { loading.hide(); }
     });
 
-    async function loadSuratMasuk() {
+    window.fetchSuratMasuk = async function() {
       const tbody = document.getElementById('tabelMasuk');
+      const year = document.getElementById('filterTahunMasuk').value;
+      tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">Memuat data...</td></tr>';
+      
       try {
-        const { data, error } = await supabase.from('surat_masuk').select('*').gte('tanggal_terima', TAHUN_AWAL).order('tanggal_terima', { ascending: false });
+        let query = supabase.from('surat_masuk').select('*').order('tanggal_terima', { ascending: false });
+        if(year !== 'semua') {
+          query = query.gte('tanggal_terima', `${year}-01-01`).lte('tanggal_terima', `${year}-12-31`);
+        }
+        
+        const { data, error } = await query;
         if (error) throw error;
-        tbody.innerHTML = data.length === 0 ? '<tr><td colspan="5" class="text-center py-4 text-muted">Belum ada arsip</td></tr>' : '';
-        data.forEach((d) => {
-          const fileLink = d.file_url ? `<a href="${d.file_url}" target="_blank" class="btn btn-sm btn-light border rounded-pill"><i class="fa-solid fa-file-pdf text-danger me-1"></i></a>` : '-';
-          tbody.innerHTML += `<tr><td><strong class="text-success">${d.nomor_surat}</strong></td><td>${d.pengirim}</td><td>${d.perihal}</td><td><span class="badge bg-light text-dark border">${formatDateID(d.tanggal_terima)}</span></td><td class="text-center">${fileLink}</td></tr>`;
-        });
+        
+        cacheMasuk = data || [];
+        renderSuratMasuk();
       } catch (e) { tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Gagal memuat data.</td></tr>'; }
+    }
+
+    function renderSuratMasuk() {
+      const tbody = document.getElementById('tabelMasuk');
+      const search = document.getElementById('searchMasuk').value.toLowerCase();
+      
+      const filtered = cacheMasuk.filter(d => 
+        (d.nomor_surat || '').toLowerCase().includes(search) ||
+        (d.pengirim || '').toLowerCase().includes(search) ||
+        (d.perihal || '').toLowerCase().includes(search)
+      );
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">Data tidak ditemukan</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = '';
+      filtered.forEach((d) => {
+        const fileLink = d.file_url ? `<a href="${d.file_url}" target="_blank" class="btn btn-sm btn-light border rounded-pill"><i class="fa-solid fa-file-pdf text-danger"></i></a>` : '-';
+        const deleteBtn = isAdminMode ? `<button class="btn btn-sm btn-outline-danger border-0 rounded-circle ms-1" onclick="promptDelete(${d.id}, 'surat_masuk')"><i class="fa-solid fa-trash"></i></button>` : '';
+        
+        tbody.innerHTML += `<tr>
+          <td><strong class="text-success">${d.nomor_surat}</strong></td>
+          <td>${d.pengirim}</td>
+          <td>${d.perihal}</td>
+          <td><span class="badge bg-light text-dark border">${formatDateID(d.tanggal_terima)}</span></td>
+          <td class="text-center d-flex justify-content-center">${fileLink} ${deleteBtn}</td>
+        </tr>`;
+      });
     }
 
     // ================= SURAT KELUAR =================
@@ -501,37 +689,64 @@
         const fileUrl = await uploadFileHelper(document.getElementById('k_file').files[0], 'surat_keluar');
         loading.show("Menyimpan ke Database Supabase...");
         const { error } = await supabase.from('surat_keluar').insert([{
-          nomor_surat: document.getElementById('k_nomor').value,
-          unit_pengirim: document.getElementById('k_unit').value, // Kolom Baru
-          tujuan: document.getElementById('k_tujuan').value,
-          perihal: document.getElementById('k_perihal').value,
-          tanggal_keluar: document.getElementById('k_tanggal').value,
-          file_url: fileUrl
+          nomor_surat: document.getElementById('k_nomor').value, unit_pengirim: document.getElementById('k_unit').value,
+          tujuan: document.getElementById('k_tujuan').value, perihal: document.getElementById('k_perihal').value,
+          tanggal_keluar: document.getElementById('k_tanggal').value, file_url: fileUrl
         }]);
         if (error) throw error;
-        document.getElementById('formKeluar').reset(); loadSuratKeluar(); updateDashboardCounts();
+        document.getElementById('formKeluar').reset(); window.fetchSuratKeluar(); updateDashboardCounts();
       } catch (error) { console.error(error); alert("Terjadi kesalahan sistem!"); } finally { loading.hide(); }
     });
 
-    async function loadSuratKeluar() {
+    window.fetchSuratKeluar = async function() {
       const tbody = document.getElementById('tabelKeluar');
+      const year = document.getElementById('filterTahunKeluar').value;
+      tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Memuat data...</td></tr>';
+      
       try {
-        const { data, error } = await supabase.from('surat_keluar').select('*').gte('tanggal_keluar', TAHUN_AWAL).order('tanggal_keluar', { ascending: false });
+        let query = supabase.from('surat_keluar').select('*').order('tanggal_keluar', { ascending: false });
+        if(year !== 'semua') {
+          query = query.gte('tanggal_keluar', `${year}-01-01`).lte('tanggal_keluar', `${year}-12-31`);
+        }
+        
+        const { data, error } = await query;
         if (error) throw error;
-        tbody.innerHTML = data.length === 0 ? '<tr><td colspan="6" class="text-center py-4 text-muted">Belum ada arsip</td></tr>' : '';
-        data.forEach((d) => {
-          const fileLink = d.file_url ? `<a href="${d.file_url}" target="_blank" class="btn btn-sm btn-light border rounded-pill"><i class="fa-solid fa-file-pdf text-danger me-1"></i></a>` : '-';
-          // Render data dengan Badge Unit
-          tbody.innerHTML += `<tr>
-            <td><strong style="color: #1967d2;">${d.nomor_surat}</strong></td>
-            <td>${getUnitBadge(d.unit_pengirim)}</td>
-            <td>${d.tujuan}</td>
-            <td>${d.perihal}</td>
-            <td><span class="badge bg-light text-dark border">${formatDateID(d.tanggal_keluar)}</span></td>
-            <td class="text-center">${fileLink}</td>
-          </tr>`;
-        });
+        
+        cacheKeluar = data || [];
+        renderSuratKeluar();
       } catch (e) { tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Gagal memuat data</td></tr>'; }
+    }
+
+    function renderSuratKeluar() {
+      const tbody = document.getElementById('tabelKeluar');
+      const search = document.getElementById('searchKeluar').value.toLowerCase();
+      
+      const filtered = cacheKeluar.filter(d => 
+        (d.nomor_surat || '').toLowerCase().includes(search) ||
+        (d.unit_pengirim || '').toLowerCase().includes(search) ||
+        (d.tujuan || '').toLowerCase().includes(search) ||
+        (d.perihal || '').toLowerCase().includes(search)
+      );
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Data tidak ditemukan</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = '';
+      filtered.forEach((d) => {
+        const fileLink = d.file_url ? `<a href="${d.file_url}" target="_blank" class="btn btn-sm btn-light border rounded-pill"><i class="fa-solid fa-file-pdf text-danger"></i></a>` : '-';
+        const deleteBtn = isAdminMode ? `<button class="btn btn-sm btn-outline-danger border-0 rounded-circle ms-1" onclick="promptDelete(${d.id}, 'surat_keluar')"><i class="fa-solid fa-trash"></i></button>` : '';
+
+        tbody.innerHTML += `<tr>
+          <td><strong style="color: #1967d2;">${d.nomor_surat}</strong></td>
+          <td>${getUnitBadge(d.unit_pengirim)}</td>
+          <td>${d.tujuan}</td>
+          <td>${d.perihal}</td>
+          <td><span class="badge bg-light text-dark border">${formatDateID(d.tanggal_keluar)}</span></td>
+          <td class="text-center d-flex justify-content-center">${fileLink} ${deleteBtn}</td>
+        </tr>`;
+      });
     }
 
     // ================= SURAT KETERANGAN =================
@@ -541,53 +756,82 @@
         const fileUrl = await uploadFileHelper(document.getElementById('ket_file').files[0], 'surat_keterangan');
         loading.show("Menyimpan ke Database Supabase...");
         const { error } = await supabase.from('surat_keterangan').insert([{
-          nomor_surat: document.getElementById('ket_nomor').value,
-          nama_pemohon: document.getElementById('ket_nama').value,
-          nik_pemohon: document.getElementById('ket_nik').value,
-          jenis_keterangan: document.getElementById('ket_jenis').value,
-          perihal: document.getElementById('ket_perihal').value, // Kolom Baru
-          tanggal_dibuat: document.getElementById('ket_tanggal').value,
+          nomor_surat: document.getElementById('ket_nomor').value, nama_pemohon: document.getElementById('ket_nama').value,
+          nik_pemohon: document.getElementById('ket_nik').value, jenis_keterangan: document.getElementById('ket_jenis').value,
+          perihal: document.getElementById('ket_perihal').value, tanggal_dibuat: document.getElementById('ket_tanggal').value,
           file_url: fileUrl
         }]);
         if (error) throw error;
-        document.getElementById('formKeterangan').reset(); loadSuratKeterangan(); updateDashboardCounts();
+        document.getElementById('formKeterangan').reset(); window.fetchSuratKeterangan(); updateDashboardCounts();
       } catch (error) { console.error(error); alert("Terjadi kesalahan sistem!"); } finally { loading.hide(); }
     });
 
-    async function loadSuratKeterangan() {
+    window.fetchSuratKeterangan = async function() {
       const tbody = document.getElementById('tabelKeterangan');
+      const year = document.getElementById('filterTahunKeterangan').value;
+      tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Memuat data...</td></tr>';
+      
       try {
-        const { data, error } = await supabase.from('surat_keterangan').select('*').gte('tanggal_dibuat', TAHUN_AWAL).order('tanggal_dibuat', { ascending: false });
+        let query = supabase.from('surat_keterangan').select('*').order('tanggal_dibuat', { ascending: false });
+        if(year !== 'semua') {
+          query = query.gte('tanggal_dibuat', `${year}-01-01`).lte('tanggal_dibuat', `${year}-12-31`);
+        }
+        
+        const { data, error } = await query;
         if (error) throw error;
-        tbody.innerHTML = data.length === 0 ? '<tr><td colspan="6" class="text-center py-4 text-muted">Belum ada arsip</td></tr>' : '';
-        data.forEach((d) => {
-          const fileLink = d.file_url ? `<a href="${d.file_url}" target="_blank" class="btn btn-sm btn-light border rounded-pill"><i class="fa-solid fa-file-pdf text-danger me-1"></i></a>` : '-';
-          // Render data dengan Perihal
-          tbody.innerHTML += `<tr>
-            <td><strong style="color: #b47804;">${d.nomor_surat}</strong></td>
-            <td><span class="fw-semibold">${d.nama_pemohon}</span><br><small class="text-muted">${d.nik_pemohon}</small></td>
-            <td><span class="badge rounded-pill bg-light text-dark border">${d.jenis_keterangan}</span></td>
-            <td>${d.perihal || '-'}</td>
-            <td>${formatDateID(d.tanggal_dibuat)}</td>
-            <td class="text-center">${fileLink}</td>
-          </tr>`;
-        });
+        
+        cacheKeterangan = data || [];
+        renderSuratKeterangan();
       } catch (e) { tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Gagal memuat data</td></tr>'; }
     }
 
-    // Bind Refresh Buttons
-    document.querySelectorAll('.btn-refresh').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const type = e.currentTarget.getAttribute('data-type');
-        if(type === 'masuk') loadSuratMasuk();
-        if(type === 'keluar') loadSuratKeluar();
-        if(type === 'keterangan') loadSuratKeterangan();
+    function renderSuratKeterangan() {
+      const tbody = document.getElementById('tabelKeterangan');
+      const search = document.getElementById('searchKeterangan').value.toLowerCase();
+      
+      const filtered = cacheKeterangan.filter(d => 
+        (d.nomor_surat || '').toLowerCase().includes(search) ||
+        (d.nama_pemohon || '').toLowerCase().includes(search) ||
+        (d.jenis_keterangan || '').toLowerCase().includes(search) ||
+        (d.perihal || '').toLowerCase().includes(search)
+      );
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Data tidak ditemukan</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = '';
+      filtered.forEach((d) => {
+        const fileLink = d.file_url ? `<a href="${d.file_url}" target="_blank" class="btn btn-sm btn-light border rounded-pill"><i class="fa-solid fa-file-pdf text-danger"></i></a>` : '-';
+        const deleteBtn = isAdminMode ? `<button class="btn btn-sm btn-outline-danger border-0 rounded-circle ms-1" onclick="promptDelete(${d.id}, 'surat_keterangan')"><i class="fa-solid fa-trash"></i></button>` : '';
+
+        tbody.innerHTML += `<tr>
+          <td><strong style="color: #b47804;">${d.nomor_surat}</strong></td>
+          <td><span class="fw-semibold">${d.nama_pemohon}</span><br><small class="text-muted">${d.nik_pemohon}</small></td>
+          <td><span class="badge rounded-pill bg-light text-dark border">${d.jenis_keterangan}</span></td>
+          <td>${d.perihal || '-'}</td>
+          <td>${formatDateID(d.tanggal_dibuat)}</td>
+          <td class="text-center d-flex justify-content-center">${fileLink} ${deleteBtn}</td>
+        </tr>`;
       });
-    });
+    }
+
+    // Event Listeners Filter Tahun
+    document.getElementById('filterTahunMasuk').addEventListener('change', fetchSuratMasuk);
+    document.getElementById('filterTahunKeluar').addEventListener('change', fetchSuratKeluar);
+    document.getElementById('filterTahunKeterangan').addEventListener('change', fetchSuratKeterangan);
+
+    // Event Listeners Search Box (Real-time Filter)
+    document.getElementById('searchMasuk').addEventListener('input', renderSuratMasuk);
+    document.getElementById('searchKeluar').addEventListener('input', renderSuratKeluar);
+    document.getElementById('searchKeterangan').addEventListener('input', renderSuratKeterangan);
 
     // INIT
     window.addEventListener('DOMContentLoaded', () => { 
-      loadSuratMasuk(); loadSuratKeluar(); loadSuratKeterangan(); 
+      window.fetchSuratMasuk(); 
+      window.fetchSuratKeluar(); 
+      window.fetchSuratKeterangan(); 
       updateDashboardCounts(); 
     });
   </script>
