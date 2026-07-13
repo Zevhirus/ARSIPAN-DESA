@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+html_perfected = """<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
@@ -62,10 +62,8 @@
     .card-form { border: none; border-radius: 16px; box-shadow: 0 6px 15px rgba(0,0,0,0.04); background: #ffffff; padding: 25px;}
     .form-control, .form-select { border-radius: 10px; padding: 10px 15px; border: 1px solid #dce4de; background-color: #fbfdfc; font-size: 0.9rem;}
     .form-control:focus, .form-select:focus { border-color: #228b22; box-shadow: 0 0 0 0.25rem rgba(34, 139, 34, 0.15); }
-    
-    .table-container { border-radius: 12px; overflow-x: auto; border: 1px solid #eaeeeb; background-color: white;}
-    .table { margin-bottom: 0; }
-    .table thead th { background-color: #f4f8f5; color: #444; font-weight: 600; border-bottom: 2px solid #dce4de; padding: 15px; font-size: 0.9rem; white-space: nowrap; }
+    .table-container { border-radius: 12px; overflow: hidden; border: 1px solid #eaeeeb; }
+    .table thead th { background-color: #f4f8f5; color: #444; font-weight: 600; border-bottom: 2px solid #dce4de; padding: 15px; font-size: 0.9rem;}
     .table tbody td { padding: 15px; vertical-align: middle; font-size: 0.9rem;}
     .table tbody tr { transition: background-color 0.2s; }
 
@@ -75,12 +73,6 @@
     .search-wrapper .form-control:focus + .input-group-text, .search-wrapper .form-control:focus { border-color: #228b22; box-shadow: none; }
     
     .filter-tahun { border-radius: 30px; font-weight: 500; color: #444; }
-
-    /* ================= FIX: AKSI COLUMN STICKY ================= */
-    .table th.aksi-col, .table td.aksi-col { position: sticky; right: 0; z-index: 2; border-left: 1px solid #eaeeeb; min-width: 110px; }
-    .table thead th.aksi-col { background-color: #f4f8f5; }
-    .table tbody td.aksi-col { background-color: #ffffff; }
-    .table-hover tbody tr:hover td.aksi-col { background-color: #f2f7f4; }
 
     /* Badge Unit */
     .badge-unit { padding: 6px 12px; border-radius: 30px; font-weight: 600; font-size: 0.75rem; letter-spacing: 0.5px; }
@@ -176,7 +168,7 @@
           <div class="dash-card card-ket">
             <div class="icon-box"><i class="fa-solid fa-file-signature"></i></div>
             <div class="card-content">
-              <h5>SURAT KETERANGAN</h5>
+              <h5>SURAT KEPUTUSAN</h5>
               <p>Kelola dan arsipkan semua surat keterangan warga.</p>
               <button class="btn-dash" onclick="showDataView('keterangan-tab')">Kelola Sekarang <i class="fa-solid fa-arrow-right"></i></button>
             </div>
@@ -247,7 +239,7 @@
       </li>
       <li class="nav-item" role="presentation">
         <button class="nav-link" id="keterangan-tab" data-bs-toggle="tab" data-bs-target="#panel-keterangan" type="button" role="tab">
-          <i class="fa-solid fa-file-signature me-2"></i>Surat Keterangan
+          <i class="fa-solid fa-file-signature me-2"></i>Surat Keputusan
         </button>
       </li>
     </ul>
@@ -290,9 +282,9 @@
                 </div>
               </div>
               
-              <div class="table-container">
+              <div class="table-container table-responsive">
                 <table class="table table-hover align-middle">
-                  <thead><tr><th>No. Surat</th><th>Pengirim</th><th>Perihal</th><th>Tgl Terima</th><th class="text-center aksi-col">Aksi</th></tr></thead>
+                  <thead><tr><th>No. Surat</th><th>Pengirim</th><th>Perihal</th><th>Tgl Terima</th><th class="text-center">Aksi</th></tr></thead>
                   <tbody id="tabelMasuk"></tbody>
                 </table>
               </div>
@@ -348,9 +340,9 @@
                 </div>
               </div>
 
-              <div class="table-container">
+              <div class="table-container table-responsive">
                 <table class="table table-hover align-middle">
-                  <thead><tr><th>No. Surat</th><th>Unit</th><th>Tujuan</th><th>Perihal</th><th>Tgl Keluar</th><th class="text-center aksi-col">Aksi</th></tr></thead>
+                  <thead><tr><th>No. Surat</th><th>Unit</th><th>Tujuan</th><th>Perihal</th><th>Tgl Keluar</th><th class="text-center">Aksi</th></tr></thead>
                   <tbody id="tabelKeluar"></tbody>
                 </table>
               </div>
@@ -359,7 +351,7 @@
         </div>
       </div>
 
-      <!-- TAB SURAT KETERANGAN -->
+      <!-- TAB SURAT KEPUTUSAN -->
       <div class="tab-pane fade" id="panel-keterangan" role="tabpanel">
         <div class="row g-4">
           <div class="col-lg-4">
@@ -390,7 +382,7 @@
             <div class="card-form h-100">
               <!-- Toolbar Filter & Search -->
               <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
-                <h5 class="mb-0 fw-bold" style="color: #444;">Daftar Surat Keterangan</h5>
+                <h5 class="mb-0 fw-bold" style="color: #444;">Daftar Surat Keputusan</h5>
                 <div class="d-flex flex-wrap gap-2">
                   <select id="filterTahunKeterangan" class="form-select form-select-sm w-auto filter-tahun">
                     <option value="2026" selected>2026</option>
@@ -405,9 +397,9 @@
                 </div>
               </div>
 
-              <div class="table-container">
+              <div class="table-container table-responsive">
                 <table class="table table-hover align-middle">
-                  <thead><tr><th>No. Surat</th><th>Pemohon</th><th>Jenis</th><th>Perihal</th><th>Tanggal</th><th class="text-center aksi-col">Aksi</th></tr></thead>
+                  <thead><tr><th>No. Surat</th><th>Pemohon</th><th>Jenis</th><th>Perihal</th><th>Tanggal</th><th class="text-center">Aksi</th></tr></thead>
                   <tbody id="tabelKeterangan"></tbody>
                 </table>
               </div>
@@ -481,7 +473,7 @@
     let deleteData = { id: null, table: null };
     const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
 
-    // Cache Data Array
+    // Cache Data Array (Untuk Search Client-Side yg super cepat)
     let cacheMasuk = [];
     let cacheKeluar = [];
     let cacheKeterangan = [];
@@ -545,7 +537,7 @@
       const { data, error } = await supabase.storage.from(BUCKET_NAME).upload(uniqueFileName, file);
       if (error) {
         console.error("Upload error:", error);
-        alert("Gagal mengunggah file!");
+        alert("Gagal mengunggah file! Pastikan Bucket 'arsip_desa' ada dan Public.");
         return null;
       }
       const { data: publicUrlData } = supabase.storage.from(BUCKET_NAME).getPublicUrl(uniqueFileName);
@@ -578,6 +570,8 @@
         document.getElementById('count-total').innerText = countM + countK + countKet;
       } catch (e) { console.error("Gagal load statistik:", e); }
     }
+
+    // Bind event untuk dropdown tahun di dashboard
     document.getElementById('dashYear').addEventListener('change', updateDashboardCounts);
 
     // ================= HELPER FORMAT =================
@@ -628,7 +622,7 @@
       e.preventDefault();
       try {
         const fileUrl = await uploadFileHelper(document.getElementById('m_file').files[0], 'surat_masuk');
-        loading.show("Menyimpan ke Database...");
+        loading.show("Menyimpan ke Database Supabase...");
         const { error } = await supabase.from('surat_masuk').insert([{
           nomor_surat: document.getElementById('m_nomor').value, pengirim: document.getElementById('m_pengirim').value,
           perihal: document.getElementById('m_perihal').value, tanggal_terima: document.getElementById('m_tanggal').value,
@@ -643,11 +637,16 @@
       const tbody = document.getElementById('tabelMasuk');
       const year = document.getElementById('filterTahunMasuk').value;
       tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">Memuat data...</td></tr>';
+      
       try {
         let query = supabase.from('surat_masuk').select('*').order('tanggal_terima', { ascending: false });
-        if(year !== 'semua') query = query.gte('tanggal_terima', `${year}-01-01`).lte('tanggal_terima', `${year}-12-31`);
+        if(year !== 'semua') {
+          query = query.gte('tanggal_terima', `${year}-01-01`).lte('tanggal_terima', `${year}-12-31`);
+        }
+        
         const { data, error } = await query;
         if (error) throw error;
+        
         cacheMasuk = data || [];
         renderSuratMasuk();
       } catch (e) { tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Gagal memuat data.</td></tr>'; }
@@ -656,17 +655,29 @@
     function renderSuratMasuk() {
       const tbody = document.getElementById('tabelMasuk');
       const search = document.getElementById('searchMasuk').value.toLowerCase();
-      const filtered = cacheMasuk.filter(d => (d.nomor_surat || '').toLowerCase().includes(search) || (d.pengirim || '').toLowerCase().includes(search) || (d.perihal || '').toLowerCase().includes(search));
+      
+      const filtered = cacheMasuk.filter(d => 
+        (d.nomor_surat || '').toLowerCase().includes(search) ||
+        (d.pengirim || '').toLowerCase().includes(search) ||
+        (d.perihal || '').toLowerCase().includes(search)
+      );
 
-      if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">Data tidak ditemukan</td></tr>'; return; }
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">Data tidak ditemukan</td></tr>';
+        return;
+      }
+
       tbody.innerHTML = '';
       filtered.forEach((d) => {
         const fileLink = d.file_url ? `<a href="${d.file_url}" target="_blank" class="btn btn-sm btn-light border rounded-pill"><i class="fa-solid fa-file-pdf text-danger"></i></a>` : '-';
         const deleteBtn = isAdminMode ? `<button class="btn btn-sm btn-outline-danger border-0 rounded-circle ms-1" onclick="promptDelete('${d.id}', 'surat_masuk')"><i class="fa-solid fa-trash"></i></button>` : '';
+        
         tbody.innerHTML += `<tr>
-          <td><strong class="text-success">${d.nomor_surat}</strong></td><td>${d.pengirim}</td><td>${d.perihal}</td>
+          <td><strong class="text-success">${d.nomor_surat}</strong></td>
+          <td>${d.pengirim}</td>
+          <td>${d.perihal}</td>
           <td><span class="badge bg-light text-dark border">${formatDateID(d.tanggal_terima)}</span></td>
-          <td class="aksi-col text-center"><div class="d-flex justify-content-center align-items-center gap-1">${fileLink} ${deleteBtn}</div></td>
+          <td class="text-center d-flex justify-content-center gap-2 border-0">${fileLink} ${deleteBtn}</td>
         </tr>`;
       });
     }
@@ -676,7 +687,7 @@
       e.preventDefault();
       try {
         const fileUrl = await uploadFileHelper(document.getElementById('k_file').files[0], 'surat_keluar');
-        loading.show("Menyimpan ke Database...");
+        loading.show("Menyimpan ke Database Supabase...");
         const { error } = await supabase.from('surat_keluar').insert([{
           nomor_surat: document.getElementById('k_nomor').value, unit_pengirim: document.getElementById('k_unit').value,
           tujuan: document.getElementById('k_tujuan').value, perihal: document.getElementById('k_perihal').value,
@@ -691,11 +702,16 @@
       const tbody = document.getElementById('tabelKeluar');
       const year = document.getElementById('filterTahunKeluar').value;
       tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Memuat data...</td></tr>';
+      
       try {
         let query = supabase.from('surat_keluar').select('*').order('tanggal_keluar', { ascending: false });
-        if(year !== 'semua') query = query.gte('tanggal_keluar', `${year}-01-01`).lte('tanggal_keluar', `${year}-12-31`);
+        if(year !== 'semua') {
+          query = query.gte('tanggal_keluar', `${year}-01-01`).lte('tanggal_keluar', `${year}-12-31`);
+        }
+        
         const { data, error } = await query;
         if (error) throw error;
+        
         cacheKeluar = data || [];
         renderSuratKeluar();
       } catch (e) { tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Gagal memuat data</td></tr>'; }
@@ -704,17 +720,31 @@
     function renderSuratKeluar() {
       const tbody = document.getElementById('tabelKeluar');
       const search = document.getElementById('searchKeluar').value.toLowerCase();
-      const filtered = cacheKeluar.filter(d => (d.nomor_surat || '').toLowerCase().includes(search) || (d.unit_pengirim || '').toLowerCase().includes(search) || (d.tujuan || '').toLowerCase().includes(search) || (d.perihal || '').toLowerCase().includes(search));
+      
+      const filtered = cacheKeluar.filter(d => 
+        (d.nomor_surat || '').toLowerCase().includes(search) ||
+        (d.unit_pengirim || '').toLowerCase().includes(search) ||
+        (d.tujuan || '').toLowerCase().includes(search) ||
+        (d.perihal || '').toLowerCase().includes(search)
+      );
 
-      if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Data tidak ditemukan</td></tr>'; return; }
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Data tidak ditemukan</td></tr>';
+        return;
+      }
+
       tbody.innerHTML = '';
       filtered.forEach((d) => {
         const fileLink = d.file_url ? `<a href="${d.file_url}" target="_blank" class="btn btn-sm btn-light border rounded-pill"><i class="fa-solid fa-file-pdf text-danger"></i></a>` : '-';
         const deleteBtn = isAdminMode ? `<button class="btn btn-sm btn-outline-danger border-0 rounded-circle ms-1" onclick="promptDelete('${d.id}', 'surat_keluar')"><i class="fa-solid fa-trash"></i></button>` : '';
+
         tbody.innerHTML += `<tr>
-          <td><strong style="color: #1967d2;">${d.nomor_surat}</strong></td><td>${getUnitBadge(d.unit_pengirim)}</td><td>${d.tujuan}</td><td>${d.perihal}</td>
+          <td><strong style="color: #1967d2;">${d.nomor_surat}</strong></td>
+          <td>${getUnitBadge(d.unit_pengirim)}</td>
+          <td>${d.tujuan}</td>
+          <td>${d.perihal}</td>
           <td><span class="badge bg-light text-dark border">${formatDateID(d.tanggal_keluar)}</span></td>
-          <td class="aksi-col text-center"><div class="d-flex justify-content-center align-items-center gap-1">${fileLink} ${deleteBtn}</div></td>
+          <td class="text-center d-flex justify-content-center gap-2 border-0">${fileLink} ${deleteBtn}</td>
         </tr>`;
       });
     }
@@ -724,7 +754,7 @@
       e.preventDefault();
       try {
         const fileUrl = await uploadFileHelper(document.getElementById('ket_file').files[0], 'surat_keterangan');
-        loading.show("Menyimpan ke Database...");
+        loading.show("Menyimpan ke Database Supabase...");
         const { error } = await supabase.from('surat_keterangan').insert([{
           nomor_surat: document.getElementById('ket_nomor').value, nama_pemohon: document.getElementById('ket_nama').value,
           nik_pemohon: document.getElementById('ket_nik').value, jenis_keterangan: document.getElementById('ket_jenis').value,
@@ -740,11 +770,16 @@
       const tbody = document.getElementById('tabelKeterangan');
       const year = document.getElementById('filterTahunKeterangan').value;
       tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Memuat data...</td></tr>';
+      
       try {
         let query = supabase.from('surat_keterangan').select('*').order('tanggal_dibuat', { ascending: false });
-        if(year !== 'semua') query = query.gte('tanggal_dibuat', `${year}-01-01`).lte('tanggal_dibuat', `${year}-12-31`);
+        if(year !== 'semua') {
+          query = query.gte('tanggal_dibuat', `${year}-01-01`).lte('tanggal_dibuat', `${year}-12-31`);
+        }
+        
         const { data, error } = await query;
         if (error) throw error;
+        
         cacheKeterangan = data || [];
         renderSuratKeterangan();
       } catch (e) { tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Gagal memuat data</td></tr>'; }
@@ -753,31 +788,50 @@
     function renderSuratKeterangan() {
       const tbody = document.getElementById('tabelKeterangan');
       const search = document.getElementById('searchKeterangan').value.toLowerCase();
-      const filtered = cacheKeterangan.filter(d => (d.nomor_surat || '').toLowerCase().includes(search) || (d.nama_pemohon || '').toLowerCase().includes(search) || (d.jenis_keterangan || '').toLowerCase().includes(search) || (d.perihal || '').toLowerCase().includes(search));
+      
+      const filtered = cacheKeterangan.filter(d => 
+        (d.nomor_surat || '').toLowerCase().includes(search) ||
+        (d.nama_pemohon || '').toLowerCase().includes(search) ||
+        (d.jenis_keterangan || '').toLowerCase().includes(search) ||
+        (d.perihal || '').toLowerCase().includes(search)
+      );
 
-      if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Data tidak ditemukan</td></tr>'; return; }
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Data tidak ditemukan</td></tr>';
+        return;
+      }
+
       tbody.innerHTML = '';
       filtered.forEach((d) => {
         const fileLink = d.file_url ? `<a href="${d.file_url}" target="_blank" class="btn btn-sm btn-light border rounded-pill"><i class="fa-solid fa-file-pdf text-danger"></i></a>` : '-';
         const deleteBtn = isAdminMode ? `<button class="btn btn-sm btn-outline-danger border-0 rounded-circle ms-1" onclick="promptDelete('${d.id}', 'surat_keterangan')"><i class="fa-solid fa-trash"></i></button>` : '';
+
         tbody.innerHTML += `<tr>
-          <td><strong style="color: #b47804;">${d.nomor_surat}</strong></td><td><span class="fw-semibold">${d.nama_pemohon}</span><br><small class="text-muted">${d.nik_pemohon}</small></td>
-          <td><span class="badge rounded-pill bg-light text-dark border">${d.jenis_keterangan}</span></td><td>${d.perihal || '-'}</td><td>${formatDateID(d.tanggal_dibuat)}</td>
-          <td class="aksi-col text-center"><div class="d-flex justify-content-center align-items-center gap-1">${fileLink} ${deleteBtn}</div></td>
+          <td><strong style="color: #b47804;">${d.nomor_surat}</strong></td>
+          <td><span class="fw-semibold">${d.nama_pemohon}</span><br><small class="text-muted">${d.nik_pemohon}</small></td>
+          <td><span class="badge rounded-pill bg-light text-dark border">${d.jenis_keterangan}</span></td>
+          <td>${d.perihal || '-'}</td>
+          <td>${formatDateID(d.tanggal_dibuat)}</td>
+          <td class="text-center d-flex justify-content-center gap-2 border-0">${fileLink} ${deleteBtn}</td>
         </tr>`;
       });
     }
 
+    // Event Listeners Filter Tahun
     document.getElementById('filterTahunMasuk').addEventListener('change', fetchSuratMasuk);
     document.getElementById('filterTahunKeluar').addEventListener('change', fetchSuratKeluar);
     document.getElementById('filterTahunKeterangan').addEventListener('change', fetchSuratKeterangan);
 
+    // Event Listeners Search Box (Real-time Filter)
     document.getElementById('searchMasuk').addEventListener('input', renderSuratMasuk);
     document.getElementById('searchKeluar').addEventListener('input', renderSuratKeluar);
     document.getElementById('searchKeterangan').addEventListener('input', renderSuratKeterangan);
 
+    // INIT
     window.addEventListener('DOMContentLoaded', () => { 
-      window.fetchSuratMasuk(); window.fetchSuratKeluar(); window.fetchSuratKeterangan(); 
+      window.fetchSuratMasuk(); 
+      window.fetchSuratKeluar(); 
+      window.fetchSuratKeterangan(); 
       updateDashboardCounts(); 
     });
   </script>
